@@ -1,36 +1,78 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Tayo Services & Maintenance
 
-## Getting Started
+Marketing site for **Tayo Services & Maintenance**. Local handyman, cleaning, junk removal and small moves in Surrey and nearby.
 
-First, run the development server:
+Stack: Next.js (App Router), TypeScript, Tailwind CSS v4.
+
+Design: full-bleed photo hero, Syncopate display type, split sections, Tayo tokens (`#2D73FF`, `#0A0A0A`, `#6B7280`, `#F3F4F6`, `#0E3A9E`).
+
+## Quick start
 
 ```bash
+npm install
+cp .env.example .env.local
+# Set NEXT_PUBLIC_PHONE to your real number before any public deploy
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Hosting checklist
 
-## Learn More
+1. Set `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_EMAIL` on the host
+2. Set `RESEND_API_KEY`, verified `RESEND_FROM`, and `LEADS_TO_EMAIL` so quote emails deliver
+3. Optional: `NEXT_PUBLIC_GOOGLE_BUSINESS_URL`, `NEXT_PUBLIC_MAP_EMBED_URL`, GA / GSC
+4. Deploy with `npm run build` (or connect the repo to your host)
+5. Drop real van / crew / job photos into `public/images/` (same filenames)
+6. Paste verified Google reviews into `lib/reviews.ts` — home marquee and `/reviews` cards stay empty until then
+7. Point your domain and enable HTTPS
 
-To learn more about Next.js, take a look at the following resources:
+## Environment variables
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Canonical origin (sitemap, schema, metadata) |
+| `NEXT_PUBLIC_PHONE` | **Required for launch** — display + click-to-call / text (no fake fallback) |
+| `NEXT_PUBLIC_EMAIL` | Contact + lead fallback |
+| `NEXT_PUBLIC_GA_ID` | Google Analytics (gtag) |
+| `NEXT_PUBLIC_GSC_VERIFICATION` | Search Console meta verification |
+| `NEXT_PUBLIC_*_URL` | Social / Google Business links for schema + reviews CTA |
+| `NEXT_PUBLIC_MAP_EMBED_URL` | Optional GBP / service-area map iframe |
+| `RESEND_API_KEY` | **Required in production** for quote emails |
+| `RESEND_FROM` / `LEADS_TO_EMAIL` | Resend from/to (use a verified domain in prod) |
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Without `RESEND_API_KEY`, local/dev submissions still succeed (logged server-side). Production returns an error so the form does not fake success.
 
-## Deploy on Vercel
+## Photos
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+JPEGs under `public/images/`:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `hero/handyman-hero.jpg` – homepage hero
+- `about/` – work detail + finishes
+- `services/` – service cards
+- `careers/` – plumber role imagery
+- `gallery/` – optional before / after pairs
+- `logo-v3.png` / `logo-white-v3.png` – brand mark
+
+Swap in real Tayo van, crew and job photos anytime. Paths stay the same.
+
+## Routes
+
+Home, Services (+ 5 service pages), Property Managers, Areas (+ 10 cities), About, Careers (plumber), FAQ, Blog (SEO guides), Contact, Privacy. `/reviews` exists as a Google-review CTA until real quotes are pasted into `lib/reviews.ts`.
+
+Technical SEO: `sitemap.xml`, `robots.txt`, LocalBusiness JSON-LD, FAQ JSON-LD, per-page metadata.
+
+## Launch checklist
+
+- [ ] Domain + professional email
+- [ ] Real phone / email in host env (`NEXT_PUBLIC_PHONE` must be set)
+- [ ] Resend verified + quote form tested end-to-end (with a photo)
+- [ ] Real photos (van, team, before/after) when available
+- [ ] Google Business Profile verified + URL in env
+- [ ] Search Console + Analytics connected
+- [ ] First real reviews pasted into `lib/reviews.ts`
