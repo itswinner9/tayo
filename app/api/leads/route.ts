@@ -1,23 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { EMAIL } from "@/lib/siteConfig";
+import { Resend } from "resend";
+import { LEADS_TO_EMAIL, SITE_NAME } from "@/lib/siteConfig";
 
 const MAX_PHOTOS = 4;
 const MAX_PHOTO_BYTES = 4 * 1024 * 1024; // 4MB each
 const MAX_TOTAL_BYTES = 10 * 1024 * 1024; // 10MB total
 
-type ResendAttachment = {
-  filename: string;
-  content: string;
-};
-
-async function fileToAttachment(file: File): Promise<ResendAttachment | null> {
+async function fileToAttachment(file: File) {
   if (file.size <= 0 || file.size > MAX_PHOTO_BYTES) return null;
   if (!file.type.startsWith("image/")) return null;
   const buf = Buffer.from(await file.arrayBuffer());
   const safeName = (file.name || "photo.jpg").replace(/[^\w.\-]+/g, "_");
   return {
     filename: safeName.slice(0, 80),
-    content: buf.toString("base64"),
+    content: buf,
   };
 }
 
@@ -58,27 +54,21 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const attachments: ResendAttachment[] = [];
+    const attachments = [];
     for (const file of photoFiles) {
       const att = await fileToAttachment(file);
       if (att) attachments.push(att);
     }
 
-    const payload = {
+    console.info("[tayo-lead]", {
       name,
       phone,
       email,
       service,
       address,
       dateNeeded,
-      message,
       photoCount: attachments.length,
-      receivedAt: Date.now(),
-    };
-
-    console.info("[tayo-lead]", {
-      ...payload,
-      message: message ? `[${message.length} chars]` : "",
+      to: LEADS_TO_EMAIL,
     });
 
     const resendKey = process.env.RESEND_API_KEY;
@@ -94,7 +84,10 @@ export async function POST(req: NextRequest) {
           { status: 503 },
         );
       }
-      // Local/dev without Resend: accept so UI can be tested
+      console.warn(
+        "[tayo-lead] RESEND_API_KEY missing — lead logged only (dev). Add key to .env.local to deliver to",
+        LEADS_TO_EMAIL,
+      );
       return NextResponse.json({ ok: true, dev: true });
     }
 
@@ -110,33 +103,46 @@ export async function POST(req: NextRequest) {
       message || "(no message)",
     ].join("\n");
 
-    const res = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        from:
-          process.env.RESEND_FROM ||
-          "Tayo Website <leads@tayoservices.ca>",
-        to: [process.env.LEADS_TO_EMAIL || EMAIL],
-        reply_to: email,
-        subject: `Quote: ${service} - ${name}`,
-        text,
-        ...(attachments.length ? { attachments } : {}),
-      }),
+    const html = `
+      <h2 style="margin:0 0 12px;font-family:Arial,sans-serif;">New quote request</h2>
+      <p style="font-family:Arial,sans-serif;line-height:1.5;">
+        <strong>Name:</strong> ${escapeHtml(name)}<br/>
+        <strong>Phone:</strong> ${escapeHtml(phone)}<br/>
+        <strong>Email:</strong> ${escapeHtml(email)}<br/>
+        <strong>Service:</strong> ${escapeHtml(service)}<br/>
+        <strong>Address/City:</strong> ${escapeHtml(address)}<br/>
+        <strong>Date needed:</strong> ${escapeHtml(dateNeeded || "n/a")}<br/>
+        <strong>Photos:</strong> ${attachments.length}
+      </p>
+      <p style="font-family:Arial,sans-serif;line-height:1.5;white-space:pre-wrap;">${escapeHtml(message || "(no message)")}</p>
+      <p style="font-family:Arial,sans-serif;color:#666;font-size:12px;">Sent from ${escapeHtml(SITE_NAME)} website quote form. Reply to this email to reach the customer.</p>
+    `;
+
+    const resend = new Resend(resendKey);
+    // Free Resend testing: use onboarding@resend.dev until you verify tayoservices.ca
+    const from =
+      process.env.RESEND_FROM ||
+      "Tayo Website <onboarding@resend.dev>";
+
+    const { data, error } = await resend.emails.send({
+      from,
+      to: [LEADS_TO_EMAIL],
+      replyTo: email,
+      subject: `Quote: ${service} - ${name}`,
+      text,
+      html,
+      ...(attachments.length ? { attachments } : {}),
     });
 
-    if (!res.ok) {
-      const detail = await res.text().catch(() => "");
-      console.error("[tayo-lead] Resend failed", res.status, detail);
+    if (error) {
+      console.error("[tayo-lead] Resend failed", error);
       return NextResponse.json(
         { error: "Could not send your request. Please call or text us." },
         { status: 502 },
       );
     }
 
+    console.info("[tayo-lead] emailed", { id: data?.id, to: LEADS_TO_EMAIL });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[tayo-lead] error", err);
@@ -145,4 +151,12 @@ export async function POST(req: NextRequest) {
       { status: 500 },
     );
   }
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }

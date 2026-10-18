@@ -9,8 +9,15 @@ export const PHONE_NUMBER = (process.env.NEXT_PUBLIC_PHONE || "").trim();
 export const PHONE_DIGITS = PHONE_NUMBER.replace(/\D/g, "");
 export const HAS_PHONE = PHONE_DIGITS.length >= 10;
 
+/** Public contact email shown on the site */
 export const EMAIL =
-  process.env.NEXT_PUBLIC_EMAIL || "hello@tayoservices.ca";
+  process.env.NEXT_PUBLIC_EMAIL || "zakariemahamed9@gmail.com";
+
+/** Inbox that receives quote form submissions (via Resend) */
+export const LEADS_TO_EMAIL =
+  process.env.LEADS_TO_EMAIL ||
+  process.env.NEXT_PUBLIC_EMAIL ||
+  "zakariemahamed9@gmail.com";
 
 export const HOURS = "Mo-Sa 08:00-18:00";
 export const HOURS_DISPLAY = "Mon-Sat, 8am-6pm";

@@ -25,7 +25,11 @@ npm start
 ## Hosting checklist
 
 1. Set `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_EMAIL` on the host
-2. Set `RESEND_API_KEY`, verified `RESEND_FROM`, and `LEADS_TO_EMAIL` so quote emails deliver
+2. **Quote emails → Gmail (Resend):**
+   - Sign up free at [resend.com](https://resend.com) with `zakariemahamed9@gmail.com`
+   - Create an API key and set `RESEND_API_KEY` in `.env.local` and on your host (Vercel/etc.)
+   - Keep `RESEND_FROM=Tayo Website <onboarding@resend.dev>` until you verify a domain
+   - `LEADS_TO_EMAIL` is already `zakariemahamed9@gmail.com` — quote forms email that inbox
 3. Optional: `NEXT_PUBLIC_GOOGLE_BUSINESS_URL`, `NEXT_PUBLIC_MAP_EMBED_URL`, GA / GSC
 4. Deploy with `npm run build` (or connect the repo to your host)
 5. Drop real van / crew / job photos into `public/images/` (same filenames)
@@ -38,13 +42,14 @@ npm start
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin (sitemap, schema, metadata) |
 | `NEXT_PUBLIC_PHONE` | **Required for launch** — display + click-to-call / text (no fake fallback) |
-| `NEXT_PUBLIC_EMAIL` | Contact + lead fallback |
+| `NEXT_PUBLIC_EMAIL` | Contact email on the site (default: `zakariemahamed9@gmail.com`) |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics (gtag) |
 | `NEXT_PUBLIC_GSC_VERIFICATION` | Search Console meta verification |
 | `NEXT_PUBLIC_*_URL` | Social / Google Business links for schema + reviews CTA |
 | `NEXT_PUBLIC_MAP_EMBED_URL` | Optional GBP / service-area map iframe |
-| `RESEND_API_KEY` | **Required in production** for quote emails |
-| `RESEND_FROM` / `LEADS_TO_EMAIL` | Resend from/to (use a verified domain in prod) |
+| `RESEND_API_KEY` | **Required to deliver quotes** — free key from [resend.com](https://resend.com) |
+| `RESEND_FROM` | Sender (`onboarding@resend.dev` until domain verified) |
+| `LEADS_TO_EMAIL` | Where quotes arrive (default: `zakariemahamed9@gmail.com`) |
 
 Without `RESEND_API_KEY`, local/dev submissions still succeed (logged server-side). Production returns an error so the form does not fake success.
 
