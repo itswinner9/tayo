@@ -25,11 +25,10 @@ npm start
 ## Hosting checklist
 
 1. Set `NEXT_PUBLIC_SITE_URL`, `NEXT_PUBLIC_PHONE`, `NEXT_PUBLIC_EMAIL` on the host
-2. **Quote emails → Gmail (Resend):**
-   - Sign up free at [resend.com](https://resend.com) with `zakariemahamed9@gmail.com`
-   - Create an API key and set `RESEND_API_KEY` in `.env.local` and on your host (Vercel/etc.)
-   - Keep `RESEND_FROM=Tayo Website <onboarding@resend.dev>` until you verify a domain
-   - `LEADS_TO_EMAIL` is already `zakariemahamed9@gmail.com` — quote forms email that inbox
+2. **Quote emails → Gmail (Resend + tayoservices.ca):**
+   - Sign up at [resend.com](https://resend.com), add domain `tayoservices.ca`, add DNS from [docs/RESEND_DNS.md](docs/RESEND_DNS.md)
+   - When domain status is **Verified**, set `RESEND_API_KEY` and `RESEND_FROM=Tayo Website <leads@tayoservices.ca>`
+   - Quotes still arrive at `LEADS_TO_EMAIL=zakariemahamed9@gmail.com`
 3. Optional: `NEXT_PUBLIC_GOOGLE_BUSINESS_URL`, `NEXT_PUBLIC_MAP_EMBED_URL`, GA / GSC
 4. Deploy with `npm run build` (or connect the repo to your host)
 5. Drop real van / crew / job photos into `public/images/` (same filenames)

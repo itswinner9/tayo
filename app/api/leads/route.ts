@@ -119,10 +119,11 @@ export async function POST(req: NextRequest) {
     `;
 
     const resend = new Resend(resendKey);
-    // Free Resend testing: use onboarding@resend.dev until you verify tayoservices.ca
+    // Prefer branded sender once tayoservices.ca is Verified (docs/RESEND_DNS.md).
+    // Fallback: onboarding@resend.dev (only delivers to your Resend signup inbox).
     const from =
       process.env.RESEND_FROM ||
-      "Tayo Website <onboarding@resend.dev>";
+      "Tayo Website <leads@tayoservices.ca>";
 
     const { data, error } = await resend.emails.send({
       from,
