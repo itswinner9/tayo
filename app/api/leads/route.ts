@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import { sendQuoSms, toE164 } from "@/lib/quo";
 import { LEADS_TO_EMAIL, SITE_NAME } from "@/lib/siteConfig";
 
 const MAX_PHOTOS = 4;
@@ -71,10 +72,41 @@ export async function POST(req: NextRequest) {
       to: LEADS_TO_EMAIL,
     });
 
+    // Instant SMS lead alert to the owner's cell (Quo), independent of email
+    const alertTo = toE164(process.env.QUO_ALERT_TO || "");
+    const smsAlerted = alertTo
+      ? await sendQuoSms(
+          alertTo,
+          [
+            `New Tayo lead: ${service}`,
+            `${name} · ${phone}`,
+            address,
+            dateNeeded ? `Needed: ${dateNeeded}` : "",
+            message ? `"${message.slice(0, 200)}"` : "",
+          ]
+            .filter(Boolean)
+            .join("\n"),
+        )
+      : false;
+
+    const customerPhone = toE164(phone);
+    const firstName = name.split(/\s+/)[0];
+    const confirmCustomer = () =>
+      customerPhone
+        ? sendQuoSms(
+            customerPhone,
+            `Hi ${firstName}, thanks for contacting Tayo Services! We got your ${service} request and will text you a quote shortly, usually the same day. Reply here anytime with photos or questions.`,
+          )
+        : Promise.resolve(false);
+
     const resendKey = process.env.RESEND_API_KEY;
     const isProd = process.env.NODE_ENV === "production";
 
     if (!resendKey) {
+      if (smsAlerted) {
+        await confirmCustomer();
+        return NextResponse.json({ ok: true });
+      }
       if (isProd) {
         return NextResponse.json(
           {
@@ -137,6 +169,10 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error("[tayo-lead] Resend failed", error);
+      if (smsAlerted) {
+        await confirmCustomer();
+        return NextResponse.json({ ok: true });
+      }
       return NextResponse.json(
         { error: "Could not send your request. Please call or text us." },
         { status: 502 },
@@ -144,6 +180,7 @@ export async function POST(req: NextRequest) {
     }
 
     console.info("[tayo-lead] emailed", { id: data?.id, to: LEADS_TO_EMAIL });
+    await confirmCustomer();
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("[tayo-lead] error", err);

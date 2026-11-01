@@ -35,8 +35,23 @@ export const metadata: Metadata = {
   },
   description:
     "Local handyman for homes and rentals in Surrey and the Lower Mainland. Plus cleaning, junk removal and small moves. Free quotes.",
+  keywords: [
+    "handyman Surrey",
+    "handyman Lower Mainland",
+    "handyman Abbotsford",
+    "move-out cleaning Surrey",
+    "junk removal Surrey",
+    "small moves Surrey",
+    "rental unit turnover",
+    "strata maintenance BC",
+  ],
+  applicationName: SITE_NAME,
+  formatDetection: { telephone: true },
   openGraph: {
     type: "website",
+    title: "Handyman, Cleaning & Junk Removal in the Lower Mainland | Tayo",
+    description:
+      "One call. One price. Done right. Local handyman, cleaning, junk removal and small moves. Free quotes.",
     locale: "en_CA",
     siteName: SITE_NAME,
     url: SITE_URL,

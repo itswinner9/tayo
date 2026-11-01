@@ -121,12 +121,22 @@ export default function HomePage() {
 
       <section className="border-y border-black/10 bg-soft-white">
         <div className="mx-auto grid w-[min(1180px,92%)] grid-cols-1 gap-4 py-5 text-center sm:grid-cols-3 sm:divide-x sm:divide-black/10 sm:text-left">
-          {["Free quotes", "Same-day replies", "Surrey & nearby"].map(
+          {["Free quotes", "Same-day replies", "Serving the Lower Mainland"].map(
             (item) => (
               <p
                 key={item}
-                className="font-display text-[11px] font-bold tracking-[0.14em] text-tayo-black sm:px-6 sm:first:pl-0"
+                className="flex items-center justify-center gap-2 font-display text-[11px] font-bold tracking-[0.14em] text-tayo-black sm:justify-start sm:px-6 sm:first:pl-0"
               >
+                <svg
+                  aria-hidden
+                  viewBox="0 0 16 16"
+                  className="h-3.5 w-3.5 shrink-0 text-tayo-blue"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
+                  <path d="M3 8.5l3.2 3L13 4.5" />
+                </svg>
                 {item}
               </p>
             ),

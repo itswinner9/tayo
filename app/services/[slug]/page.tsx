@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
+import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/seo/JsonLd";
 import { getService, SERVICES } from "@/lib/services";
 import { LOCATIONS } from "@/lib/locations";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -25,6 +26,12 @@ export async function generateMetadata({
     title: service.metaTitle,
     description: service.metaDescription,
     alternates: { canonical: `${SITE_URL}${service.href}` },
+    openGraph: {
+      title: service.metaTitle,
+      description: service.metaDescription,
+      url: `${SITE_URL}${service.href}`,
+      images: [{ url: service.image, alt: service.imageAlt }],
+    },
   };
 }
 
@@ -39,6 +46,17 @@ async function ServiceContent({
 
   return (
     <>
+      <ServiceJsonLd
+        name={service.title}
+        description={service.metaDescription}
+        path={service.href}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Services", path: "/services" },
+          { name: service.title, path: service.href },
+        ]}
+      />
       <PageHero
         title={service.h1}
         subtitle={service.description}
