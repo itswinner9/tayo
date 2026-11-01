@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { CtaBand } from "@/components/CtaBand";
 import { PageHero } from "@/components/PageHero";
+import { BreadcrumbJsonLd, ServiceJsonLd } from "@/components/seo/JsonLd";
 import { SERVICES } from "@/lib/services";
 import { getLocation, LOCATIONS } from "@/lib/locations";
 import { SITE_URL } from "@/lib/siteConfig";
@@ -21,9 +22,13 @@ export async function generateMetadata({
   const location = getLocation(city);
   if (!location) return {};
   return {
-    title: `Cleaning, Junk Removal & Handyman ${location.name}`,
-    description: `Move-out cleaning, junk removal, repairs and small moves in ${location.name}, BC. Free quotes from Tayo Services.`,
+    title: `Handyman ${location.name} BC | Repairs, Cleaning & Junk Removal`,
+    description: `Local handyman in ${location.name}, BC for repairs, move-out cleaning, junk removal and small moves. Serving ${location.neighbourhoods.slice(0, 3).join(", ")} and nearby. Free same-day quotes.`,
     alternates: { canonical: `${SITE_URL}/areas/${location.slug}` },
+    openGraph: {
+      title: `Handyman ${location.name} BC | Tayo Services`,
+      url: `${SITE_URL}/areas/${location.slug}`,
+    },
   };
 }
 
@@ -38,6 +43,18 @@ async function CityContent({
 
   return (
     <>
+      <ServiceJsonLd
+        name={`Handyman, cleaning and junk removal in ${location.name}`}
+        description={location.blurb}
+        path={`/areas/${location.slug}`}
+        areas={[location.name]}
+      />
+      <BreadcrumbJsonLd
+        items={[
+          { name: "Service areas", path: "/areas" },
+          { name: location.name, path: `/areas/${location.slug}` },
+        ]}
+      />
       <PageHero
         title={`Cleaning, Junk Removal and Handyman Services in ${location.name}`}
         subtitle={`Tayo Services & Maintenance helps people in ${location.name} with move-out cleaning, junk removal, small repairs and small moves.`}

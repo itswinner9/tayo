@@ -3,7 +3,6 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { SERVICES } from "@/lib/services";
 import { LOCATIONS } from "@/lib/locations";
 import {
-  EMAIL,
   HAS_PHONE,
   HOURS_DISPLAY,
   PHONE_DIGITS,
@@ -135,14 +134,6 @@ export function Footer() {
                 </li>
               </>
             )}
-            <li>
-              <a
-                href={`mailto:${EMAIL}`}
-                className="transition hover:text-white"
-              >
-                {EMAIL}
-              </a>
-            </li>
             <li className="text-white/60">{HOURS_DISPLAY}</li>
             <li className="text-white/60">Surrey, BC · Lower Mainland</li>
           </ul>

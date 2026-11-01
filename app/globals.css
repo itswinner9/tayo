@@ -231,18 +231,10 @@ body {
     );
 }
 
-/* Extra white reading band so logo + copy stay the focus */
 .hero-copy-panel {
   position: relative;
   max-width: min(36rem, 100%);
   padding: 1.25rem 1.25rem 1.35rem;
-  border-radius: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.92) 0%,
-    rgba(255, 255, 255, 0.78) 100%
-  );
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.65);
 }
 
 @media (min-width: 768px) {

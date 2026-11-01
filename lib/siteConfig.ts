@@ -4,10 +4,16 @@ export const SITE_URL = (
   process.env.NEXT_PUBLIC_SITE_URL || "https://tayoservices.ca"
 ).replace(/\/$/, "");
 
-/** Set NEXT_PUBLIC_PHONE in .env.local / host env before launch. No fake fallback. */
-export const PHONE_NUMBER = (process.env.NEXT_PUBLIC_PHONE || "").trim();
+/** Main business line (Quo). NEXT_PUBLIC_PHONE overrides it. */
+export const PHONE_NUMBER = (
+  process.env.NEXT_PUBLIC_PHONE || "(236) 707-9582"
+).trim();
 export const PHONE_DIGITS = PHONE_NUMBER.replace(/\D/g, "");
 export const HAS_PHONE = PHONE_DIGITS.length >= 10;
+/** E.164 form for schema.org and SMS APIs, e.g. +12367079582 */
+export const PHONE_E164 = HAS_PHONE
+  ? `+${PHONE_DIGITS.length === 10 ? "1" : ""}${PHONE_DIGITS}`
+  : "";
 
 /** Public contact email shown on the site */
 export const EMAIL =
