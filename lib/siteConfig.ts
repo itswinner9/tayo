@@ -16,14 +16,10 @@ export const PHONE_E164 = HAS_PHONE
   : "";
 
 /** Public contact email shown on the site */
-export const EMAIL =
-  process.env.NEXT_PUBLIC_EMAIL || "zakariemahamed9@gmail.com";
+export const EMAIL = "tayo247services@gmail.com";
 
 /** Inbox that receives quote form submissions (via Resend) */
-export const LEADS_TO_EMAIL =
-  process.env.LEADS_TO_EMAIL ||
-  process.env.NEXT_PUBLIC_EMAIL ||
-  "zakariemahamed9@gmail.com";
+export const LEADS_TO_EMAIL = "tayo247services@gmail.com";
 
 export const HOURS = "Mo-Sa 08:00-18:00";
 export const HOURS_DISPLAY = "Mon-Sat, 8am-6pm";

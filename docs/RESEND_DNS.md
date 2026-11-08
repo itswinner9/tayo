@@ -28,7 +28,7 @@ TTL: Auto / 3600 is fine.
 ```bash
 RESEND_API_KEY=re_xxxxxxxx
 RESEND_FROM=Tayo Website <leads@tayoservices.ca>
-LEADS_TO_EMAIL=zakariemahamed9@gmail.com
+LEADS_TO_EMAIL=tayo247services@gmail.com
 ```
 
 3. Submit a test quote on `/contact`. You should get mail at Gmail, From: `leads@tayoservices.ca`.

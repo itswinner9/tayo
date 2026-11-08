@@ -28,7 +28,7 @@ npm start
 2. **Quote emails → Gmail (Resend + tayoservices.ca):**
    - Sign up at [resend.com](https://resend.com), add domain `tayoservices.ca`, add DNS from [docs/RESEND_DNS.md](docs/RESEND_DNS.md)
    - When domain status is **Verified**, set `RESEND_API_KEY` and `RESEND_FROM=Tayo Website <leads@tayoservices.ca>`
-   - Quotes still arrive at `LEADS_TO_EMAIL=zakariemahamed9@gmail.com`
+   - Quotes still arrive at `LEADS_TO_EMAIL=tayo247services@gmail.com`
 3. Optional: `NEXT_PUBLIC_GOOGLE_BUSINESS_URL`, `NEXT_PUBLIC_MAP_EMBED_URL`, GA / GSC
 4. Deploy with `npm run build` (or connect the repo to your host)
 5. Drop real van / crew / job photos into `public/images/` (same filenames)
@@ -41,14 +41,14 @@ npm start
 |---|---|
 | `NEXT_PUBLIC_SITE_URL` | Canonical origin (sitemap, schema, metadata) |
 | `NEXT_PUBLIC_PHONE` | **Required for launch** — display + click-to-call / text (no fake fallback) |
-| `NEXT_PUBLIC_EMAIL` | Contact email on the site (default: `zakariemahamed9@gmail.com`) |
+| `NEXT_PUBLIC_EMAIL` | Contact email on the site (default: `tayo247services@gmail.com`) |
 | `NEXT_PUBLIC_GA_ID` | Google Analytics (gtag) |
 | `NEXT_PUBLIC_GSC_VERIFICATION` | Search Console meta verification |
 | `NEXT_PUBLIC_*_URL` | Social / Google Business links for schema + reviews CTA |
 | `NEXT_PUBLIC_MAP_EMBED_URL` | Optional GBP / service-area map iframe |
 | `RESEND_API_KEY` | **Required to deliver quotes** — free key from [resend.com](https://resend.com) |
 | `RESEND_FROM` | Sender (`onboarding@resend.dev` until domain verified) |
-| `LEADS_TO_EMAIL` | Where quotes arrive (default: `zakariemahamed9@gmail.com`) |
+| `LEADS_TO_EMAIL` | Where quotes arrive (default: `tayo247services@gmail.com`) |
 
 Without `RESEND_API_KEY`, local/dev submissions still succeed (logged server-side). Production returns an error so the form does not fake success.
 
